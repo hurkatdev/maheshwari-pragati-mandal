@@ -19,7 +19,7 @@
  * Each order is appended as one row.
  */
 
-var SPREADSHEET_ID = "1PuzDe1MA4764wubHQ1z-sQTr49VIDrYnl4U6qbMFakw";
+var SPREADSHEET_ID = "YOUR_SPREADSHEET_ID"; // Paste your Sheet ID here before deploying — do not commit the real value
 var SHEET_NAME     = "Orders"; // Change if you want a different tab name
 
 function doPost(e) {
