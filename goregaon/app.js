@@ -1,4 +1,4 @@
-// Google Apps Script web app URL — deploy goregaon/google_apps_script.js and paste the /exec URL here
+// Injected at deploy time from GitHub Secret SHEETS_SCRIPT_URL — do not hardcode here.
 const SHEETS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL";
 
 const locations = [
