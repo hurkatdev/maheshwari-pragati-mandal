@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Background: warm golden -->
+  <circle cx="60" cy="60" r="60" fill="#fff7ed"/>
+  <!-- Bhujia pile base -->
+  <ellipse cx="60" cy="76" rx="40" ry="11" fill="#d97706" opacity="0.25"/>
+  <!-- Sev/bhujia strands — thin, slightly wavy/curly golden pieces -->
+  <!-- Layer 1: back strands -->
+  <path d="M28 70 Q36 55 44 62 Q52 70 60 58 Q68 46 76 54 Q84 62 92 50"
+        stroke="#d97706" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <path d="M30 62 Q40 50 48 57 Q56 65 64 52 Q72 40 80 48 Q88 56 94 44"
+        stroke="#b45309" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.55"/>
+  <!-- Layer 2: mid strands -->
+  <path d="M26 75 Q34 62 42 68 Q50 75 58 63 Q66 52 74 60 Q82 68 90 56"
+        stroke="#ca8a04" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M30 80 Q38 67 46 73 Q54 80 62 68 Q70 56 78 64 Q86 72 92 62"
+        stroke="#d97706" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.65"/>
+  <!-- Layer 3: front strands -->
+  <path d="M24 78 Q32 66 40 72 Q48 79 56 67 Q64 55 72 63 Q80 71 88 60 Q94 52 98 56"
+        stroke="#b45309" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <path d="M26 84 Q36 70 44 77 Q52 84 60 72 Q68 60 76 68 Q84 76 92 66"
+        stroke="#ca8a04" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.75"/>
+  <!-- Short top pieces -->
+  <path d="M44 44 Q50 38 56 44 Q60 50 64 44"
+        stroke="#d97706" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <path d="M60 42 Q66 35 72 42 Q76 48 80 42"
+        stroke="#b45309" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <!-- Spice dots — characteristic masala on bhujia -->
+  <circle cx="48" cy="60" r="1.5" fill="#92400e" opacity="0.5"/>
+  <circle cx="64" cy="55" r="1.5" fill="#92400e" opacity="0.5"/>
+  <circle cx="76" cy="66" r="1.5" fill="#92400e" opacity="0.45"/>
+  <circle cx="56" cy="72" r="1" fill="#92400e" opacity="0.4"/>
+</svg>

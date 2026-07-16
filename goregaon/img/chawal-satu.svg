@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Background: clean white/cream like rice flour -->
+  <circle cx="60" cy="60" r="60" fill="#f0fdf4"/>
+  <!-- Powder mound -->
+  <ellipse cx="60" cy="78" rx="42" ry="12" fill="#d1fae5" opacity="0.6"/>
+  <ellipse cx="60" cy="70" rx="36" ry="15" fill="#e5e7eb" opacity="0.7"/>
+  <ellipse cx="60" cy="63" rx="28" ry="13" fill="#f3f4f6" opacity="0.9"/>
+  <ellipse cx="60" cy="56" rx="20" ry="9" fill="#ffffff" opacity="1"/>
+  <!-- Highlight sheen -->
+  <ellipse cx="52" cy="52" rx="8" ry="3.5" fill="#ffffff" opacity="0.8"/>
+  <!-- Rice grains scattered -->
+  <ellipse cx="78" cy="44" rx="4" ry="9" fill="#f0fdf4" stroke="#6ee7b7" stroke-width="1" transform="rotate(15 78 44)"/>
+  <ellipse cx="84" cy="52" rx="4" ry="9" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1" transform="rotate(-10 84 52)"/>
+  <ellipse cx="38" cy="46" rx="4" ry="9" fill="#f0fdf4" stroke="#6ee7b7" stroke-width="1" transform="rotate(-20 38 46)"/>
+  <ellipse cx="34" cy="57" rx="3.5" ry="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1" transform="rotate(5 34 57)"/>
+  <!-- Rice grain center line -->
+  <line x1="78" y1="38" x2="78" y2="50" stroke="#34d399" stroke-width="0.8" transform="rotate(15 78 44)" opacity="0.5"/>
+  <line x1="84" y1="46" x2="84" y2="58" stroke="#34d399" stroke-width="0.8" transform="rotate(-10 84 52)" opacity="0.5"/>
+  <line x1="38" y1="40" x2="38" y2="52" stroke="#34d399" stroke-width="0.8" transform="rotate(-20 38 46)" opacity="0.5"/>
+  <!-- Fine texture dots on powder -->
+  <circle cx="58" cy="58" r="1" fill="#d1fae5" opacity="0.8"/>
+  <circle cx="64" cy="54" r="1" fill="#d1fae5" opacity="0.8"/>
+  <circle cx="56" cy="52" r="1" fill="#d1fae5" opacity="0.8"/>
+</svg>

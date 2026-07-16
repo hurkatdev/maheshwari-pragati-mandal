@@ -11,23 +11,23 @@ const locations = [
 
 const catalog = {
   sattu: [
-    { id: "chana_satu_kolkata", name: "Chana Satu (Kolkata)", unit: "per kg",           emoji: "🫘", gradient: "linear-gradient(135deg, #fef3c7, #fde68a)" },
-    { id: "gehu_satu",          name: "Gehu Satu",            unit: "per kg",           emoji: "🌾", gradient: "linear-gradient(135deg, #fef9c3, #fef08a)" },
-    { id: "chawal_satu",        name: "Chawal Satu",          unit: "per kg",           emoji: "🍚", gradient: "linear-gradient(135deg, #f0fdf4, #d1fae5)" },
-    { id: "mumbai_dalia",       name: "Mumbai Dalia",         unit: "per kg",           emoji: "🌻", gradient: "linear-gradient(135deg, #fff7ed, #fed7aa)" },
+    { id: "chana_satu_kolkata", name: "Chana Satu (Kolkata)", unit: "per kg",            img: "img/chana-satu.svg" },
+    { id: "gehu_satu",          name: "Gehu Satu",            unit: "per kg",            img: "img/gehu-satu.svg"  },
+    { id: "chawal_satu",        name: "Chawal Satu",          unit: "per kg",            img: "img/chawal-satu.svg"},
+    { id: "mumbai_dalia",       name: "Mumbai Dalia",         unit: "per kg",            img: "img/mumbai-dalia.svg"},
   ],
   mithai: [
-    { id: "pisi_sugar",  name: "Pisi Sugar",  unit: "per kg",   emoji: "🍬", gradient: "linear-gradient(135deg, #fdf4ff, #f5d0fe)" },
-    { id: "bura_sugar",  name: "Bura Sugar",  unit: "per kg",   emoji: "🧁", gradient: "linear-gradient(135deg, #fff1f2, #fecdd3)" },
-    { id: "rasgulla",    name: "Rasgulla",    unit: "per tin",  emoji: "🍮", gradient: "linear-gradient(135deg, #fffbeb, #fde68a)" },
+    { id: "pisi_sugar", name: "Pisi Sugar", unit: "per kg",  img: "img/pisi-sugar.svg" },
+    { id: "bura_sugar", name: "Bura Sugar", unit: "per kg",  img: "img/bura-sugar.svg" },
+    { id: "rasgulla",   name: "Rasgulla",   unit: "per tin", img: "img/rasgulla.svg"   },
   ],
   special: [
-    { id: "kesar",           name: "Kesar",           unit: "1 gm / packet",    emoji: "🌺", gradient: "linear-gradient(135deg, #fff7ed, #fdba74)" },
-    { id: "moong_papad",     name: "Moong Papad",     unit: "800 gm / packet",  emoji: "🫓", gradient: "linear-gradient(135deg, #f0fdf4, #bbf7d0)" },
-    { id: "chana_papad",     name: "Chana Papad",     unit: "400 gm / packet",  emoji: "🥙", gradient: "linear-gradient(135deg, #fffbeb, #fde68a)" },
-    { id: "bhujia_bikaneri", name: "Bhujia Bikaneri", unit: "1 kg / packet",    emoji: "🌶️", gradient: "linear-gradient(135deg, #fff7ed, #fed7aa)" },
-    { id: "mehendi",         name: "Mehendi",         unit: "250 gm / packet",  emoji: "🌿", gradient: "linear-gradient(135deg, #f0fdf4, #bbf7d0)" },
-    { id: "varak",           name: "Varak",           unit: "10 pieces / packet",emoji: "✨", gradient: "linear-gradient(135deg, #f8fafc, #e2e8f0)" },
+    { id: "kesar",           name: "Kesar",           unit: "1 gm / packet",     img: "img/kesar.svg"       },
+    { id: "moong_papad",     name: "Moong Papad",     unit: "800 gm / packet",   img: "img/moong-papad.svg" },
+    { id: "chana_papad",     name: "Chana Papad",     unit: "400 gm / packet",   img: "img/chana-papad.svg" },
+    { id: "bhujia_bikaneri", name: "Bhujia Bikaneri", unit: "1 kg / packet",     img: "img/bhujia.svg"      },
+    { id: "mehendi",         name: "Mehendi",         unit: "250 gm / packet",   img: "img/mehendi.svg"     },
+    { id: "varak",           name: "Varak",           unit: "10 pieces / packet", img: "img/varak.svg"      },
   ],
 };
 
@@ -68,7 +68,9 @@ function createProductCard(prod, section) {
   card.className = "product-card-compact";
   card.innerHTML = `
     <span class="category-chip ${meta.chipClass}">${meta.chipLabel}</span>
-    <div class="product-image-area" style="background:${prod.gradient};">${prod.emoji}</div>
+    <div class="product-image-area">
+      <img src="${prod.img}" alt="${prod.name}" class="product-img">
+    </div>
     <div class="product-name-compact">${prod.name}</div>
     <div class="product-unit-info">${prod.unit}</div>
     <div class="qty-counter">

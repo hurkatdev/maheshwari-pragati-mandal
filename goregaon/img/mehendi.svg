@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Background: light green-cream -->
+  <circle cx="60" cy="60" r="60" fill="#f0fdf4"/>
+  <!-- Mehendi cone -->
+  <path d="M54 88 L66 88 L62 22 L58 22 Z" fill="#2d6a4f"/>
+  <!-- Cone shading -->
+  <path d="M60 22 L62 22 L66 88 L63 88 Z" fill="#1b4332" opacity="0.4"/>
+  <path d="M58 22 L60 22 L60 88 L57 88 Z" fill="#40916c" opacity="0.3"/>
+  <!-- Cone tip — twisted/pointed -->
+  <path d="M58 22 Q60 14 62 22" fill="#40916c"/>
+  <!-- Cone body texture — henna has a paste-like look -->
+  <path d="M56 40 Q60 38 64 40" stroke="#40916c" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M55 55 Q60 53 65 55" stroke="#40916c" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M55 70 Q60 68 65 70" stroke="#40916c" stroke-width="1" fill="none" opacity="0.5"/>
+  <!-- Henna design on hand suggestion -->
+  <!-- Decorative leaf/floral pattern coming out of cone tip -->
+  <path d="M60 20 Q50 10 42 18 Q50 24 60 20" fill="#52b788" opacity="0.7"/>
+  <path d="M60 20 Q70 10 78 18 Q70 24 60 20" fill="#40916c" opacity="0.7"/>
+  <path d="M60 18 Q55 8 58 4 Q62 8 60 18" fill="#74c69d" opacity="0.6"/>
+  <!-- Dot pattern typical of henna designs -->
+  <circle cx="60" cy="22" r="2" fill="#1b4332"/>
+  <circle cx="52" cy="20" r="1.5" fill="#2d6a4f" opacity="0.7"/>
+  <circle cx="68" cy="20" r="1.5" fill="#2d6a4f" opacity="0.7"/>
+  <!-- Small leaves -->
+  <ellipse cx="46" cy="16" rx="4" ry="6" fill="#52b788" opacity="0.6" transform="rotate(-30 46 16)"/>
+  <ellipse cx="74" cy="16" rx="4" ry="6" fill="#40916c" opacity="0.6" transform="rotate(30 74 16)"/>
+  <!-- Nozzle at cone bottom -->
+  <ellipse cx="60" cy="88" rx="8" ry="3" fill="#1b4332"/>
+  <!-- Henna paste squeeze mark -->
+  <path d="M57 92 Q60 96 63 92" stroke="#2d6a4f" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="60" cy="96" r="3" fill="#2d6a4f"/>
+</svg>

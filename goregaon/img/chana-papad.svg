@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Background -->
+  <circle cx="60" cy="60" r="60" fill="#fffbeb"/>
+  <!-- Chana papad disc — tan/brown colour, different from moong papad -->
+  <ellipse cx="60" cy="62" rx="40" ry="36" fill="#d4a853" opacity="0.8" transform="rotate(10 60 62)"/>
+  <ellipse cx="60" cy="62" rx="36" ry="32" fill="#deb060" opacity="0.6" transform="rotate(10 60 62)"/>
+  <ellipse cx="60" cy="62" rx="22" ry="18" fill="#e8c070" opacity="0.5" transform="rotate(10 60 62)"/>
+  <!-- Chana papad bubbles — more pronounced, larger than moong -->
+  <circle cx="52" cy="55" r="6" fill="#ffffff" opacity="0.3"/>
+  <circle cx="70" cy="52" r="5" fill="#ffffff" opacity="0.28"/>
+  <circle cx="68" cy="68" r="7" fill="#ffffff" opacity="0.25"/>
+  <circle cx="46" cy="68" r="4.5" fill="#ffffff" opacity="0.28"/>
+  <circle cx="60" cy="74" r="4" fill="#ffffff" opacity="0.2"/>
+  <circle cx="44" cy="57" r="3" fill="#ffffff" opacity="0.22"/>
+  <circle cx="74" cy="60" r="3.5" fill="#ffffff" opacity="0.22"/>
+  <circle cx="57" cy="46" r="3" fill="#ffffff" opacity="0.25"/>
+  <!-- Chana speckles — small dark dots from chana pieces -->
+  <circle cx="56" cy="58" r="1.5" fill="#92400e" opacity="0.3"/>
+  <circle cx="65" cy="55" r="1" fill="#92400e" opacity="0.3"/>
+  <circle cx="62" cy="66" r="1.5" fill="#92400e" opacity="0.25"/>
+  <circle cx="52" cy="64" r="1" fill="#92400e" opacity="0.25"/>
+  <circle cx="70" cy="62" r="1" fill="#92400e" opacity="0.2"/>
+  <!-- Edge -->
+  <ellipse cx="60" cy="62" rx="40" ry="36" fill="none" stroke="#b45309" stroke-width="2" opacity="0.4" transform="rotate(10 60 62)"/>
+  <!-- Shine -->
+  <ellipse cx="46" cy="50" rx="7" ry="4" fill="#ffffff" opacity="0.3" transform="rotate(10 60 62)"/>
+</svg>

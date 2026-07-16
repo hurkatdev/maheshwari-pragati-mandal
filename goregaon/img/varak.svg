@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Background: neutral off-white -->
+  <circle cx="60" cy="60" r="60" fill="#f8fafc"/>
+  <!-- Backing paper layer (tissue paper varak comes on) -->
+  <rect x="22" y="38" width="76" height="58" rx="4" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <!-- Varak leaf — ultra-thin silver foil, slightly wrinkled/irregular edge -->
+  <path d="M28 44 Q32 40 40 42 Q50 38 58 42 Q68 38 76 42 Q84 40 90 44
+           L92 72 Q88 76 80 74 Q70 78 62 74 Q52 78 44 74 Q36 76 28 72 Z"
+        fill="url(#silverGrad)" opacity="0.92"/>
+  <!-- Silver shimmer gradient definition -->
+  <defs>
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#e8e8f0"/>
+      <stop offset="25%"  stop-color="#c0c0c8"/>
+      <stop offset="50%"  stop-color="#e0e0e8"/>
+      <stop offset="75%"  stop-color="#a8a8b8"/>
+      <stop offset="100%" stop-color="#d0d0d8"/>
+    </linearGradient>
+    <linearGradient id="shimmer" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Foil wrinkle lines — varak is extremely thin so it wrinkles -->
+  <path d="M30 50 Q45 48 55 52 Q65 56 80 50" stroke="#a0a0b0" stroke-width="0.6" fill="none" opacity="0.5"/>
+  <path d="M28 58 Q40 54 52 58 Q64 62 82 56" stroke="#a0a0b0" stroke-width="0.5" fill="none" opacity="0.4"/>
+  <path d="M30 66 Q44 62 58 66 Q70 70 88 64" stroke="#a0a0b0" stroke-width="0.6" fill="none" opacity="0.4"/>
+  <!-- Shimmer highlight on foil -->
+  <path d="M28 44 Q32 40 40 42 Q50 38 62 42 L64 62 Q52 58 40 62 Q32 66 28 72 Z"
+        fill="url(#shimmer)" opacity="0.6"/>
+  <!-- Metallic sheen spots -->
+  <ellipse cx="48" cy="54" rx="10" ry="4" fill="#ffffff" opacity="0.25" transform="rotate(-5 48 54)"/>
+  <ellipse cx="72" cy="60" rx="8" ry="3" fill="#ffffff" opacity="0.2" transform="rotate(8 72 60)"/>
+  <!-- Folded corner — varak often has a lifted corner -->
+  <path d="M88 70 L92 72 L86 78 L82 74 Z" fill="#c8c8d8" opacity="0.8"/>
+  <path d="M88 70 L92 72 L86 78 L82 74 Z" fill="#e0e0e8" opacity="0.4"/>
+  <!-- Thin edge shadow -->
+  <path d="M28 44 Q32 40 40 42 Q50 38 58 42 Q68 38 76 42 Q84 40 90 44"
+        stroke="#9090a0" stroke-width="1" fill="none" opacity="0.5"/>
+</svg>
