@@ -75,10 +75,25 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="js/firebase-config.js"></script>
   <script>
+    // ── Test mode ────────────────────────────────────────────────────────────
+    // Remove TEST_OTP once Firebase config is live and real SMS is working.
+    const TEST_OTP  = '8656';
+    const testMode  = firebaseConfig.apiKey === 'YOUR_API_KEY';
+
+    if (testMode) {
+      const badge = document.createElement('div');
+      badge.textContent = '🧪 Test Mode';
+      badge.style.cssText = 'position:fixed;top:10px;right:12px;background:#f59e0b;color:white;font-family:Outfit,sans-serif;font-size:0.75rem;font-weight:700;padding:4px 10px;border-radius:20px;z-index:999;letter-spacing:0.4px;';
+      document.body.appendChild(badge);
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
     // Redirect already-logged-in users immediately
-    auth.onAuthStateChanged(user => {
-      if (user) redirectAfterLogin();
-    });
+    if (!testMode) {
+      auth.onAuthStateChanged(user => {
+        if (user) redirectAfterLogin();
+      });
+    }
 
     let confirmationResult = null;
     let recaptchaVerifier  = null;
@@ -89,6 +104,7 @@
     }
 
     function redirectAfterLogin() {
+      if (testMode) sessionStorage.setItem('mpm_test_authed', '1');
       showStep('success');
       setTimeout(() => { window.location.href = getReturnUrl(); }, 800);
     }
@@ -133,6 +149,14 @@
         return;
       }
 
+      // In test mode skip Firebase and go straight to OTP step
+      if (testMode) {
+        document.getElementById('otp-sent-to').textContent = '+91 ' + mobile + ' (test mode)';
+        document.getElementById('otp-input').value = '';
+        showStep('otp');
+        return;
+      }
+
       setButtonLoading('send-btn', true, 'Send OTP →');
       if (recaptchaVerifier) { recaptchaVerifier.clear(); recaptchaVerifier = null; }
       initRecaptcha();
@@ -154,6 +178,12 @@
     async function verifyOTP() {
       const code = document.getElementById('otp-input').value.trim();
       setError('otp-error', '');
+
+      // Accept the static test OTP at any time
+      if (code === TEST_OTP) {
+        redirectAfterLogin();
+        return;
+      }
 
       if (!/^\d{6}$/.test(code)) {
         setError('otp-error', 'Enter the 6-digit code.');

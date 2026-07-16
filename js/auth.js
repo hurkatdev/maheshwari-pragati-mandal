@@ -1,7 +1,25 @@
 // Shared auth utilities — include AFTER firebase-config.js on every protected page.
 
+const TEST_OTP      = '8656';
+const TEST_MODE     = firebaseConfig.apiKey === 'YOUR_API_KEY';
+const TEST_USER     = { phoneNumber: '+91 (test mode)' };
+const SESSION_KEY   = 'mpm_test_authed';
+
 function requireAuth(loginRelPath, onAuthenticated) {
   showLoading(true);
+
+  // Test mode: use sessionStorage to mimic an auth session
+  if (TEST_MODE) {
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      showLoading(false);
+      if (onAuthenticated) onAuthenticated(TEST_USER);
+    } else {
+      const ret = encodeURIComponent(window.location.href);
+      window.location.replace(loginRelPath + '?return=' + ret);
+    }
+    return;
+  }
+
   auth.onAuthStateChanged(user => {
     if (!user) {
       const ret = encodeURIComponent(window.location.href);
@@ -25,11 +43,15 @@ function getPhoneDisplay(user) {
 }
 
 function signOut() {
-  auth.signOut().then(() => {
-    // Walk up to find login.html relative to current page depth
+  sessionStorage.removeItem(SESSION_KEY);
+  if (TEST_MODE) {
     const depth = window.location.pathname.split('/').filter(Boolean).length;
-    const prefix = depth > 2 ? '../' : './';
-    window.location.href = prefix + 'login.html';
+    window.location.href = (depth > 2 ? '../' : './') + 'login.html';
+    return;
+  }
+  auth.signOut().then(() => {
+    const depth = window.location.pathname.split('/').filter(Boolean).length;
+    window.location.href = (depth > 2 ? '../' : './') + 'login.html';
   });
 }
 
