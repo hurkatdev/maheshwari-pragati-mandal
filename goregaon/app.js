@@ -1,5 +1,5 @@
-const FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSeGcFHRqLr0IGr-ScEQnBvRuig1OZQPtmp_NLcZLqnX443wmw/viewform?embedded=true";
+// Google Apps Script web app URL — deploy goregaon/google_apps_script.js and paste the /exec URL here
+const SHEETS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL";
 
 const locations = [
   { name: "Goregaon (East)",  contact: "Contact representative" },
@@ -119,7 +119,7 @@ function updateSidebar() {
     row.className = "summary-item-row";
     row.innerHTML = `
       <div class="summary-item-details">
-        <span class="summary-item-name">${prod.emoji} ${prod.name}</span>
+        <span class="summary-item-name">${prod.name}</span>
         <span class="summary-item-sub">${prod.unit}</span>
       </div>
       <span class="summary-item-cost" style="color:var(--secondary-color);">× ${qty}</span>
@@ -141,7 +141,7 @@ function openFormModal() {
   const custMobile = document.getElementById("customer-mobile").value.trim();
 
   if (!orderPlace) {
-    alert("Please select an Order Place To location.");
+    alert("Please select a collection point.");
     document.getElementById("order-place").focus();
     return;
   }
@@ -156,30 +156,114 @@ function openFormModal() {
     return;
   }
 
-  document.getElementById("modal-order-info").innerHTML = `
-    <span><strong>Location:</strong> ${orderPlace}</span>
-    <span><strong>Name:</strong> ${custName}</span>
-    <span><strong>Mobile:</strong> ${custMobile}</span>
-  `;
+  // Populate customer details
+  document.getElementById("co-location").textContent = orderPlace;
+  document.getElementById("co-name").textContent     = custName;
+  document.getElementById("co-mobile").textContent   = "+91 " + custMobile;
+
+  // Populate items table
+  const selected = Object.keys(cart).filter(id => cart[id] > 0);
+  const tbody     = document.getElementById("confirm-items-body");
+  const emptyMsg  = document.getElementById("confirm-empty-msg");
+  const table     = document.getElementById("confirm-items-table");
+
+  tbody.innerHTML = "";
+
+  if (selected.length === 0) {
+    table.style.display    = "none";
+    emptyMsg.style.display = "block";
+    document.getElementById("confirm-order-btn").disabled = true;
+  } else {
+    table.style.display    = "";
+    emptyMsg.style.display = "none";
+    document.getElementById("confirm-order-btn").disabled = false;
+
+    let total = 0;
+    selected.forEach(id => {
+      const qty  = cart[id];
+      const prod = allProducts().find(p => p.id === id);
+      if (!prod) return;
+      total += qty;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="text-align:left;">${prod.name}</td>
+        <td style="text-align:center; color:var(--text-light);">${prod.unit}</td>
+        <td style="text-align:center; font-weight:700; color:var(--secondary-color);">${qty}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    document.getElementById("confirm-total").textContent = total;
+  }
+
+  showOrderReview();
+  document.getElementById("form-modal").style.display = "flex";
+}
+
+function showOrderReview() {
+  document.getElementById("order-review-state").style.display    = "block";
+  document.getElementById("order-submitting-state").style.display = "none";
+  document.getElementById("order-success-state").style.display   = "none";
+  document.getElementById("order-error-state").style.display     = "none";
+  document.getElementById("modal-close-btn").style.display       = "block";
+}
+
+async function confirmOrder() {
+  const orderPlace = document.getElementById("order-place").value.trim();
+  const custName   = document.getElementById("customer-name").value.trim();
+  const custMobile = document.getElementById("customer-mobile").value.trim();
 
   const selected = Object.keys(cart).filter(id => cart[id] > 0);
-  const chipsEl  = document.getElementById("modal-cart-chips");
+  const items    = selected.map(id => {
+    const prod = allProducts().find(p => p.id === id);
+    return { name: prod.name, unit: prod.unit, qty: cart[id] };
+  });
 
-  chipsEl.innerHTML = selected.length === 0
-    ? `<em style="color:var(--text-light); font-size:0.82rem;">No items selected — you can fill quantities in the form below.</em>`
-    : selected.map(id => {
-        const prod = allProducts().find(p => p.id === id);
-        return prod ? `<span class="cart-chip">${prod.emoji} ${prod.name} &times; ${cart[id]}</span>` : "";
-      }).join("");
+  const orderId = "MPM-" + Date.now().toString(36).toUpperCase();
 
-  const frame = document.getElementById("google-form-frame");
-  if (frame.src === "about:blank") frame.src = FORM_URL;
+  // Show submitting state
+  document.getElementById("order-review-state").style.display    = "none";
+  document.getElementById("order-submitting-state").style.display = "block";
+  document.getElementById("modal-close-btn").style.display       = "none";
 
-  document.getElementById("form-modal").style.display = "flex";
+  const payload = {
+    orderId,
+    collectionPoint: orderPlace,
+    name:            custName,
+    mobile:          "+91" + custMobile,
+    items,
+    totalUnits:      items.reduce((s, i) => s + i.qty, 0),
+    timestamp:       new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+  };
+
+  try {
+    await fetch(SHEETS_SCRIPT_URL, {
+      method:  "POST",
+      mode:    "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify(payload),
+    });
+
+    document.getElementById("success-order-id").textContent = orderId;
+    document.getElementById("order-submitting-state").style.display = "none";
+    document.getElementById("order-success-state").style.display    = "block";
+
+    // Reset cart after success
+    cart = {};
+    document.querySelectorAll(".qty-input").forEach(el => { el.value = 0; });
+    updateSidebar();
+
+  } catch (err) {
+    console.error("confirmOrder:", err);
+    document.getElementById("error-msg-text").textContent = err.message || "Network error. Please try again.";
+    document.getElementById("order-submitting-state").style.display = "none";
+    document.getElementById("order-error-state").style.display      = "block";
+    document.getElementById("modal-close-btn").style.display        = "block";
+  }
 }
 
 function closeFormModal() {
   document.getElementById("form-modal").style.display = "none";
+  showOrderReview();
 }
 
 function resetAll() {
