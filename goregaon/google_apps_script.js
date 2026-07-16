@@ -2,12 +2,11 @@
  * Maheshwari Pragati Mandal — Goregaon Pre-Order Sheet Logger
  *
  * HOW TO DEPLOY:
- * 1. Open your Google Sheet (create a new one if needed).
- * 2. Click Extensions → Apps Script.
- * 3. Delete any existing code and paste ALL of this file.
- * 4. Click Save (Ctrl+S). Name the project anything you like.
- * 5. Click Deploy → New deployment.
- * 6. Select type: Web app.
+ * 1. Go to https://script.google.com → New project (standalone is fine).
+ * 2. Delete any existing code and paste ALL of this file.
+ * 3. Click Save (Ctrl+S). Name the project anything you like.
+ * 4. Click Deploy → New deployment.
+ * 5. Select type: Web app.
  * 7. Set:
  *      Execute as  → Me
  *      Who has access → Anyone
@@ -20,12 +19,13 @@
  * Each order is appended as one row.
  */
 
-var SHEET_NAME = "Orders"; // Change if your sheet tab has a different name
+var SPREADSHEET_ID = "1PuzDe1MA4764wubHQ1z-sQTr49VIDrYnl4U6qbMFakw";
+var SHEET_NAME     = "Orders"; // Change if you want a different tab name
 
 function doPost(e) {
   try {
-    var data = JSON.parse(e.postData.contents);
-    var ss    = SpreadsheetApp.getActiveSpreadsheet();
+    var data  = JSON.parse(e.postData.contents);
+    var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheet = ss.getSheetByName(SHEET_NAME);
 
     // Create sheet + header row if it doesn't exist yet
@@ -73,7 +73,7 @@ function doPost(e) {
 // doGet — health check, returns last 5 orders (useful for testing)
 function doGet(e) {
   try {
-    var ss    = SpreadsheetApp.getActiveSpreadsheet();
+    var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheet = ss.getSheetByName(SHEET_NAME);
     if (!sheet) return ContentService.createTextOutput(JSON.stringify({ orders: [] })).setMimeType(ContentService.MimeType.JSON);
 
