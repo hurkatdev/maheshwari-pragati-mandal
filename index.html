@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maheshwari Pragati Mandal — Portal</title>
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+  <!-- Loading state (shown while Firebase auth resolves) -->
+  <div id="app-loading" class="app-loading">
+    <div class="spinner"></div>
+    <p>Loading your portal…</p>
+  </div>
+
+  <!-- Main content -->
+  <div id="app-content" style="display:none;" class="page-body">
+
+    <nav class="navbar">
+      <a class="navbar-brand" href="index.html">
+        <div class="navbar-logo">M</div>
+        <div class="navbar-title">
+          Maheshwari Pragati Mandal
+          <small>Community Portal</small>
+        </div>
+      </a>
+      <div class="navbar-right" id="navbar-user"></div>
+    </nav>
+
+    <main class="portal-hub">
+      <h1>Your Portals</h1>
+      <p class="portal-subtitle">Select a module to get started</p>
+
+      <div class="portal-grid">
+
+        <!-- Goregaon KMS Pre-Order -->
+        <div class="portal-card" onclick="window.location.href='goregaon/'">
+          <span class="portal-badge active">Active</span>
+          <div class="portal-icon">🛒</div>
+          <div class="portal-info">
+            <h2>Goregaon KMS Pre-Order</h2>
+            <p>Place your pre-order for the August 2026 distribution event — Sattu, Sugar, Sweets & Specialty items.</p>
+            <span class="portal-meta">📅 20th August 2026 · 2:00 – 5:00 PM · Goregaon (E)</span>
+          </div>
+          <button class="portal-cta">Open Portal →</button>
+        </div>
+
+        <!-- Coming soon -->
+        <div class="portal-card coming-soon">
+          <span class="portal-badge">Coming Soon</span>
+          <div class="portal-icon">➕</div>
+          <div class="portal-info">
+            <h2>More Portals</h2>
+            <p>Additional community portals will appear here as they become available.</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    requireAuth('./login.html', user => {
+      renderNavbar(user);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goregaon KMS Pre-Order — Maheshwari Pragati Mandal</title>
+  <link rel="stylesheet" href="../css/theme.css">
+</head>
+<body>
+
+  <!-- Loading state -->
+  <div id="app-loading" class="app-loading">
+    <div class="spinner"></div>
+    <p>Loading portal…</p>
+  </div>
+
+  <!-- Main content -->
+  <div id="app-content" style="display:none;" class="page-body">
+
+    <nav class="navbar">
+      <a class="navbar-brand" href="../index.html">
+        <div class="navbar-logo">M</div>
+        <div class="navbar-title">
+          Maheshwari Pragati Mandal
+          <small>Community Portal</small>
+        </div>
+      </a>
+      <div class="navbar-right" id="navbar-user"></div>
+    </nav>
+
+    <div class="event-banner">
+      📅 Distribution: <strong>20th August 2026, 2:00pm – 5:00pm</strong> &nbsp;|&nbsp; Goregaon (E) · Mahesh Nagar · Bangard Nagar · Mangalkarni · Jogeshwari
+    </div>
+
+    <main class="container">
+
+      <!-- Left: catalog -->
+      <section>
+
+        <!-- Order Info -->
+        <div class="details-card" style="margin-bottom:24px;">
+          <h2 class="card-title">Order Info</h2>
+          <div class="grid-3">
+            <div class="input-group">
+              <label for="order-place">Order Place To</label>
+              <select id="order-place">
+                <option value="">— Select location —</option>
+                <option value="Goregaon (East)">Goregaon (East)</option>
+                <option value="Mahesh Nagar">Mahesh Nagar</option>
+                <option value="Mangalkarni">Mangalkarni</option>
+                <option value="Bangard Nagar">Bangard Nagar</option>
+                <option value="Jogeshwari">Jogeshwari</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="customer-name">Full Name</label>
+              <input type="text" id="customer-name" placeholder="Enter full name">
+            </div>
+            <div class="input-group">
+              <label for="customer-mobile">Mobile Number</label>
+              <input type="tel" id="customer-mobile" placeholder="Enter mobile number">
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection points -->
+        <div class="locations-card">
+          <h3>Order &amp; Collection Points</h3>
+          <div class="locations-list" id="location-tags"></div>
+        </div>
+
+        <!-- Sattu & Grains -->
+        <h2 class="section-heading">🌾 Sattu &amp; Grains</h2>
+        <div class="products-grid-compact" id="sattu-grid"></div>
+
+        <!-- Sugar & Sweets -->
+        <h2 class="section-heading">🍬 Sugar &amp; Sweets</h2>
+        <div class="products-grid-compact" id="mithai-grid"></div>
+
+        <!-- Specialty Items -->
+        <h2 class="section-heading">✨ Specialty Items</h2>
+        <div class="products-grid-compact" id="special-grid"></div>
+
+      </section>
+
+      <!-- Right: sticky summary sidebar -->
+      <aside class="summary-sidebar">
+        <h2 class="card-title">
+          Your Selection
+          <span class="total-badge" id="badge-count">0</span>
+        </h2>
+
+        <div class="summary-items" id="summary-items-container">
+          <p style="color:var(--text-light); text-align:center; margin-top:20px; font-size:0.88rem;">
+            No items selected yet.
+          </p>
+        </div>
+
+        <div class="summary-totals">
+          <div class="summary-total-row">
+            <span>Total Units:</span>
+            <span id="total-units">0</span>
+          </div>
+        </div>
+
+        <button class="btn-block btn-primary" onclick="openFormModal()">
+          Proceed to Order Form →
+        </button>
+        <button class="btn-block btn-secondary" onclick="resetAll()">
+          Clear Selection
+        </button>
+      </aside>
+
+    </main>
+
+    <!-- Google Form Modal -->
+    <div class="modal-overlay" id="form-modal" style="display:none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Place Your Pre-Order</h3>
+          <button class="modal-close" onclick="closeFormModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+
+          <div class="cart-summary-in-modal">
+            <h4>Order Details</h4>
+            <div id="modal-order-info"
+                 style="margin-bottom:10px; font-family:'Outfit',sans-serif; font-size:0.84rem; color:var(--text-dark); display:flex; flex-wrap:wrap; gap:14px;"></div>
+            <h4 style="margin-top:8px;">Selected Items</h4>
+            <div id="modal-cart-chips">
+              <em style="color:var(--text-light); font-size:0.82rem;">No items selected — you can still fill the form below.</em>
+            </div>
+            <div class="cart-note">
+              💡 Use the details above as reference while filling in the form below.
+            </div>
+          </div>
+
+          <div class="form-iframe-wrap">
+            <iframe class="form-iframe" id="google-form-frame" src="about:blank" allowfullscreen>
+              Loading form…
+            </iframe>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div><!-- #app-content -->
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="app.js"></script>
+  <script>
+    requireAuth('../login.html', user => {
+      renderNavbar(user, { href: '../index.html', label: 'Home' });
+      initPage();
+    });
+  </script>
+</body>
+</html>

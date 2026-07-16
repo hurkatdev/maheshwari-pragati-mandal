@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Maheshwari Pragati Mandal</title>
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    body { padding-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-container">
+
+      <div class="login-logo">M</div>
+      <h1 class="login-title">Maheshwari Pragati Mandal</h1>
+      <p class="login-subtitle">Community Portal — Sign in to continue</p>
+
+      <!-- Step indicator -->
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+      </div>
+
+      <!-- Step 1: Phone number -->
+      <div id="step-phone">
+        <label class="login-label" for="phone-input">Mobile Number</label>
+        <div class="login-input-prefix">
+          <span class="prefix">+91</span>
+          <input class="login-input" type="tel" id="phone-input"
+                 placeholder="10-digit number" maxlength="10"
+                 onkeydown="if(event.key==='Enter') sendOTP()">
+        </div>
+        <div class="login-error" id="phone-error"></div>
+        <button class="btn-otp-send" id="send-btn" onclick="sendOTP()">
+          Send OTP →
+        </button>
+        <p class="login-info">We'll send a 6-digit verification code via SMS.</p>
+      </div>
+
+      <!-- Step 2: OTP entry (hidden initially) -->
+      <div id="step-otp" style="display:none;">
+        <p style="font-size:0.88rem; color:var(--text-light); margin-bottom:16px;">
+          Code sent to <strong id="otp-sent-to"></strong>.
+        </p>
+        <label class="login-label" for="otp-input">Verification Code</label>
+        <input class="otp-digit-input" type="number" id="otp-input"
+               placeholder="——————" maxlength="6"
+               onkeydown="if(event.key==='Enter') verifyOTP()">
+        <div class="login-error" id="otp-error"></div>
+        <button class="btn-otp-send" id="verify-btn" onclick="verifyOTP()">
+          Verify &amp; Continue →
+        </button>
+        <div style="text-align:center; margin-top:14px;">
+          <button class="btn-otp-ghost" onclick="goBack()">← Change number</button>
+          &nbsp;·&nbsp;
+          <button class="btn-otp-ghost" onclick="sendOTP()">Resend code</button>
+        </div>
+      </div>
+
+      <!-- Success state (brief flash before redirect) -->
+      <div id="step-success" style="display:none; text-align:center; padding: 8px 0;">
+        <div style="font-size:2.5rem; margin-bottom:12px;">✅</div>
+        <p style="font-weight:700; color:var(--success-color); font-size:1rem;">Verified! Redirecting…</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- invisible reCAPTCHA anchor -->
+  <div id="recaptcha-container"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script>
+    // Redirect already-logged-in users immediately
+    auth.onAuthStateChanged(user => {
+      if (user) redirectAfterLogin();
+    });
+
+    let confirmationResult = null;
+    let recaptchaVerifier  = null;
+
+    function getReturnUrl() {
+      const param = new URLSearchParams(window.location.search).get('return');
+      return param ? decodeURIComponent(param) : 'index.html';
+    }
+
+    function redirectAfterLogin() {
+      showStep('success');
+      setTimeout(() => { window.location.href = getReturnUrl(); }, 800);
+    }
+
+    function setError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = msg ? 'block' : 'none';
+    }
+
+    function setButtonLoading(id, loading, label) {
+      const btn = document.getElementById(id);
+      btn.disabled = loading;
+      btn.innerHTML = loading
+        ? '<span class="inline-spinner"></span> Please wait…'
+        : label;
+    }
+
+    function showStep(step) {
+      ['phone', 'otp', 'success'].forEach(s => {
+        document.getElementById('step-' + s).style.display = s === step ? 'block' : 'none';
+      });
+      // Update step dots
+      document.getElementById('dot-1').className = 'step-dot ' + (step === 'phone' ? 'active' : 'done');
+      document.getElementById('dot-2').className = 'step-dot ' + (step === 'otp' ? 'active' : step === 'success' ? 'done' : '');
+    }
+
+    function initRecaptcha() {
+      if (recaptchaVerifier) return;
+      recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        size: 'invisible',
+        'expired-callback': () => { recaptchaVerifier.clear(); recaptchaVerifier = null; },
+      });
+    }
+
+    async function sendOTP() {
+      const mobile = document.getElementById('phone-input').value.trim();
+      setError('phone-error', '');
+
+      if (!/^\d{10}$/.test(mobile)) {
+        setError('phone-error', 'Enter a valid 10-digit mobile number.');
+        return;
+      }
+
+      setButtonLoading('send-btn', true, 'Send OTP →');
+      if (recaptchaVerifier) { recaptchaVerifier.clear(); recaptchaVerifier = null; }
+      initRecaptcha();
+
+      try {
+        confirmationResult = await auth.signInWithPhoneNumber('+91' + mobile, recaptchaVerifier);
+        document.getElementById('otp-sent-to').textContent = '+91 ' + mobile;
+        document.getElementById('otp-input').value = '';
+        showStep('otp');
+      } catch (err) {
+        console.error('sendOTP:', err);
+        setError('phone-error', err.message || 'Failed to send OTP. Try again.');
+        if (recaptchaVerifier) { recaptchaVerifier.clear(); recaptchaVerifier = null; }
+      } finally {
+        setButtonLoading('send-btn', false, 'Send OTP →');
+      }
+    }
+
+    async function verifyOTP() {
+      const code = document.getElementById('otp-input').value.trim();
+      setError('otp-error', '');
+
+      if (!/^\d{6}$/.test(code)) {
+        setError('otp-error', 'Enter the 6-digit code.');
+        return;
+      }
+
+      setButtonLoading('verify-btn', true, 'Verify &amp; Continue →');
+
+      try {
+        await confirmationResult.confirm(code);
+        redirectAfterLogin();
+      } catch (err) {
+        console.error('verifyOTP:', err);
+        setError('otp-error', 'Incorrect code. Please try again.');
+        setButtonLoading('verify-btn', false, 'Verify &amp; Continue →');
+      }
+    }
+
+    function goBack() {
+      setError('otp-error', '');
+      showStep('phone');
+    }
+  </script>
+</body>
+</html>
