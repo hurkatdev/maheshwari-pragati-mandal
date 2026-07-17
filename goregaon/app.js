@@ -236,10 +236,11 @@ async function confirmOrder() {
   };
 
   try {
+    // text/plain avoids CORS preflight; Apps Script reads postData.contents regardless
     const response = await fetch(SHEETS_SCRIPT_URL, {
       method:   "POST",
       redirect: "follow",
-      headers:  { "Content-Type": "application/json" },
+      headers:  { "Content-Type": "text/plain" },
       body:     JSON.stringify(payload),
     });
 
