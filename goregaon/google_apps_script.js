@@ -7,20 +7,29 @@
  * 3. Click Save (Ctrl+S). Name the project anything you like.
  * 4. Click Deploy → New deployment.
  * 5. Select type: Web app.
- * 7. Set:
+ * 6. Set:
  *      Execute as  → Me
  *      Who has access → Anyone
- * 8. Click Deploy → Authorize access when prompted.
- * 9. Copy the Web app URL (ends with /exec).
- * 10. Open goregaon/app.js and paste it as the value of SHEETS_SCRIPT_URL.
- * 11. Commit and push.
+ * 7. Click Deploy → Authorize access when prompted.
+ * 8. Copy the Web app URL (ends with /exec).
+ * 9. Add it as the SHEETS_SCRIPT_URL secret in your GitHub repo settings.
  *
- * The script creates a header row automatically on first run.
- * Each order is appended as one row.
+ * The script creates an "Orders" tab automatically on first run.
+ * One mobile number = one order (duplicates are rejected).
  */
 
 var SPREADSHEET_ID = "YOUR_SPREADSHEET_ID"; // Paste your Sheet ID here before deploying — do not commit the real value
-var SHEET_NAME     = "Orders"; // Change if you want a different tab name
+var SHEET_NAME     = "Orders";
+
+// Column indices (1-based)
+var COL_TIMESTAMP        = 1;
+var COL_ORDER_ID         = 2;
+var COL_COLLECTION_POINT = 3;
+var COL_NAME             = 4;
+var COL_MOBILE           = 5;
+var COL_TOTAL_UNITS      = 6;
+var COL_ITEMS_DETAIL     = 7;
+var TOTAL_COLS           = 7;
 
 function doPost(e) {
   try {
@@ -40,64 +49,81 @@ function doPost(e) {
         "Total Units",
         "Items Detail",
       ]);
-      sheet.getRange(1, 1, 1, 7).setFontWeight("bold").setBackground("#065f46").setFontColor("#ffffff");
+      sheet.getRange(1, 1, 1, TOTAL_COLS)
+        .setFontWeight("bold")
+        .setBackground("#065f46")
+        .setFontColor("#ffffff");
       sheet.setFrozenRows(1);
     }
 
-    // Build items detail string: "Chana Satu (per kg) × 2, Kesar (1 gm/packet) × 1"
+    // Reject duplicate mobile numbers
+    var incomingMobile = (data.mobile || "").trim();
+    var lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      var existingMobiles = sheet.getRange(2, COL_MOBILE, lastRow - 1, 1).getValues();
+      for (var i = 0; i < existingMobiles.length; i++) {
+        if (existingMobiles[i][0].toString().trim() === incomingMobile) {
+          var existingOrderId = sheet.getRange(i + 2, COL_ORDER_ID).getValue();
+          return jsonResponse({
+            status:          "duplicate",
+            existingOrderId: existingOrderId,
+            message:         "An order has already been placed for this mobile number.",
+          });
+        }
+      }
+    }
+
     var itemsDetail = (data.items || []).map(function(item) {
       return item.name + " (" + item.unit + ") × " + item.qty;
     }).join("\n");
 
     sheet.appendRow([
-      data.timestamp    || new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-      data.orderId      || "",
+      data.timestamp       || new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+      data.orderId         || "",
       data.collectionPoint || "",
-      data.name         || "",
-      data.mobile       || "",
-      data.totalUnits   || 0,
+      data.name            || "",
+      incomingMobile,
+      data.totalUnits      || 0,
       itemsDetail,
     ]);
 
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: "success", orderId: data.orderId }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return jsonResponse({ status: "success", orderId: data.orderId });
 
   } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return jsonResponse({ status: "error", message: err.toString() });
   }
 }
 
-// doGet — health check, returns last 5 orders (useful for testing)
+// doGet — health check: returns last 5 orders
 function doGet(e) {
   try {
     var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheet = ss.getSheetByName(SHEET_NAME);
-    if (!sheet) return ContentService.createTextOutput(JSON.stringify({ orders: [] })).setMimeType(ContentService.MimeType.JSON);
+    if (!sheet) return jsonResponse({ orders: [] });
 
     var rows   = sheet.getDataRange().getValues();
     var orders = [];
     for (var i = 1; i < rows.length; i++) {
       orders.push({
-        timestamp:       rows[i][0],
-        orderId:         rows[i][1],
-        collectionPoint: rows[i][2],
-        name:            rows[i][3],
-        mobile:          rows[i][4],
-        totalUnits:      rows[i][5],
-        items:           rows[i][6],
+        timestamp:       rows[i][COL_TIMESTAMP - 1],
+        orderId:         rows[i][COL_ORDER_ID - 1],
+        collectionPoint: rows[i][COL_COLLECTION_POINT - 1],
+        name:            rows[i][COL_NAME - 1],
+        mobile:          rows[i][COL_MOBILE - 1],
+        totalUnits:      rows[i][COL_TOTAL_UNITS - 1],
+        items:           rows[i][COL_ITEMS_DETAIL - 1],
       });
     }
     orders.reverse();
+    return jsonResponse({ orders: orders.slice(0, 5) });
 
-    return ContentService
-      .createTextOutput(JSON.stringify({ orders: orders.slice(0, 5) }))
-      .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return jsonResponse({ error: err.toString() });
   }
+}
+
+function jsonResponse(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }

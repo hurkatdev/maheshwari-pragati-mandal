@@ -236,12 +236,28 @@ async function confirmOrder() {
   };
 
   try {
-    await fetch(SHEETS_SCRIPT_URL, {
-      method:  "POST",
-      mode:    "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify(payload),
+    const response = await fetch(SHEETS_SCRIPT_URL, {
+      method:   "POST",
+      redirect: "follow",
+      headers:  { "Content-Type": "application/json" },
+      body:     JSON.stringify(payload),
     });
+
+    const result = await response.json();
+
+    if (result.status === "duplicate") {
+      document.getElementById("error-msg-text").textContent =
+        "An order has already been placed for this mobile number" +
+        (result.existingOrderId ? " (Order ID: " + result.existingOrderId + ")." : ".");
+      document.getElementById("order-submitting-state").style.display = "none";
+      document.getElementById("order-error-state").style.display      = "block";
+      document.getElementById("modal-close-btn").style.display        = "block";
+      return;
+    }
+
+    if (result.status !== "success") {
+      throw new Error(result.message || "Unexpected error from server.");
+    }
 
     document.getElementById("success-order-id").textContent = orderId;
     document.getElementById("order-submitting-state").style.display = "none";
